@@ -14,4 +14,10 @@ Gem::Specification.new do |gem|
   gem.name          = "nostalgia"
   gem.require_paths = ["lib"]
   gem.version       = Nostalgia::VERSION
+  gem.add_development_dependency("guard")
+  gem.add_development_dependency("guard-minitest")
+  gem.add_development_dependency("guard-bundler")
+  gem.add_development_dependency("ruby_gntp")
+  gem.add_development_dependency("debugger")
+  gem.add_development_dependency("rb-fsevent")
 end
