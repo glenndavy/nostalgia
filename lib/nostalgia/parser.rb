@@ -21,10 +21,9 @@ class Parser
     @globals = {}
   end
 
-  def load_from_files
-    %w(stats items slabs).each do |filename|
+  def load_from_files(*files)
+    files.each do |filename|
       IO.readlines(filename).each do |line|
-        puts "about to parse #{line}"
         parse_line(line)
       end
     end
@@ -36,32 +35,30 @@ class Parser
     global_line_re  = /^STAT ([a-z_]+)\ (.*)\n$/
     end_re          = /^END$/
 
-    if global_line_re.match(line)
-      puts "global setting matched"
-      key   = $1
-      value = $2
-      value = cast(value, (TYPES[key.to_sym]||:integer)) 
-      @globals[key]=value
-    end
 
     if slab_line_re.match(line)
-      puts "slab matched: #{line}"
       key = $1.to_i
-      result = {$2 => $3.to_i}
+      result = {$2.to_sym => $3.to_i}
       unless @slabs.has_key?(key)
-        @slabs[key] = {}
+        @slabs[key] = Nostalgia::Slab.new 
       end
-      @slabs[key].merge!(result)
+      @slabs[key].merge_stats(result)
     end
 
     if item_line_re.match(line)
-      puts "item matched: #{line}"
       key = $1.to_i
-      result = {$2 => $3.to_i}
+      result = {$2.to_sym => $3.to_i}
       unless @slabs.has_key?(key)
-        @slabs[key] = {}
+        @slabs[key] = Nostalgia::Slab.new 
       end
-      @slabs[key].merge!(result)
+      @slabs[key].merge_stats(result)
+    end
+
+    if global_line_re.match(line)
+      key   = $1.to_sym
+      value = $2
+      value = cast(value, (TYPES[key]||:integer)) 
+      @globals[key]=value
     end
   end
 
