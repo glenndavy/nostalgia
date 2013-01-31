@@ -78,7 +78,7 @@ describe Nostalgia::Slab do
     end
 
     it 'should have correct wasted_memory across items' do
-      @slab.memory_wasted_across_items.must_equal( 1575 )
+      @slab.memory_wasted_across_items.must_equal( 1035335 )
     end
 
     it 'should have correct wasted_memory across slab' do
@@ -100,6 +100,11 @@ describe Nostalgia::Slab do
 
     it 'should have correct ratio of reclaimed items to evicted items' do
       @slab.ratio_of_reclaimed_items_to_evicted_items.must_equal nil
+    end
+    describe "slab summary" do
+      it "should run without breaking" do
+        @slab.summary.class.must_equal String
+      end
     end
   end
 end

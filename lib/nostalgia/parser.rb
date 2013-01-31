@@ -37,32 +37,36 @@ class Parser
 
 
     if slab_line_re.match(line)
-      key = $1.to_i
-      result = {$2.to_sym => $3.to_i}
-      unless @slabs.has_key?(key)
-        @slabs[key] = Nostalgia::Slab.new 
+      slab_key = $1.to_i
+      key      = $2.to_sym
+      value    = $3
+      result = { key => cast(value,(TYPES[key]||:float))}
+      unless @slabs.has_key?(slab_key)
+        @slabs[slab_key] = Nostalgia::Slab.new 
       end
-      @slabs[key].merge_stats(result)
+      @slabs[slab_key].merge_stats(result)
     end
 
     if item_line_re.match(line)
-      key = $1.to_i
-      result = {$2.to_sym => $3.to_i}
-      unless @slabs.has_key?(key)
-        @slabs[key] = Nostalgia::Slab.new 
+      slab_key = $1.to_i
+      key      = $2.to_sym
+      value    = $3
+      result = {key => cast(value,(TYPES[key]||:float))}
+      unless @slabs.has_key?(slab_key)
+        @slabs[slab_key] = Nostalgia::Slab.new 
       end
-      @slabs[key].merge_stats(result)
+      @slabs[slab_key].merge_stats(result)
     end
 
     if global_line_re.match(line)
       key   = $1.to_sym
       value = $2
-      value = cast(value, (TYPES[key]||:integer)) 
+      value = cast(value, (TYPES[key]||:float)) 
       @globals[key]=value
     end
   end
 
-  def cast(v,t="integer")
+  def cast(v,t=:float)
     v = case t
         when :integer
           v.to_i

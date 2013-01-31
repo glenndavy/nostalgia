@@ -4,8 +4,8 @@ require File.expand_path('../lib/nostalgia/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Glenn Davy"]
   gem.email         = ["glenn@davy.net.au"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Learn whats happening in your memcached}
+  gem.summary       = %q{Learn whats happening in your memcached}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
