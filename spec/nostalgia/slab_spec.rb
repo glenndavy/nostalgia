@@ -4,9 +4,20 @@ describe Nostalgia::Slab do
   describe 'Creating a new slab from stats' do
     it 'should create a new popluated slab' do
       slab = Nostalgia::Slab.new_from_stats_hash(:abc => "ABC", :def => "DEF")
+      slab.stats[:abc].must_equal "ABC"
+      slab.abc.must_equal "ABC"
+      slab.stats[:def].must_equal "DEF"
+      slab.def.must_equal "DEF"
+      other_slab = Nostalgia::Slab.new_from_stats_hash(:abc => "-abc-", :def => "-def-") 
+      other_slab.stats[:abc].must_equal "-abc-"
+      other_slab.abc.must_equal "-abc-"
+      other_slab.def.must_equal "-def-"
+      other_slab.stats[:def].must_equal "-def-"
+      other_slab.stats[:abc].must_equal "-abc-"
       slab.abc.must_equal "ABC"
       slab.def.must_equal "DEF"
     end
+
   end
 
   describe 'Slab stats' do

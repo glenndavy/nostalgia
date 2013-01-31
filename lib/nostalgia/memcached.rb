@@ -67,6 +67,10 @@ module Nostalgia
       @slabs.inject(0){|sum,(k,slab)| sum + slab.send(m)}
     end
 
+    def minimum_wasted_memory
+      total(:current_minimum_space_wasted)
+    end
+
     def summary(display_units=:kb)
       display_factor = case display_units.to_sym
       when :bytes then 1.0

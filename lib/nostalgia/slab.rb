@@ -28,17 +28,18 @@ class Nostalgia::Slab
     @stats = {}
   end
 
+  def merge_stats(stats)
+    stats.each do |key, stat|
+      key = key.to_sym
+      @stats[key]=stat
+      self.class.send(:define_method, key) {@stats[key]}
+    end
+  end 
+
   def self.new_from_stats_hash(stats={})
     new_slab = self.new
     new_slab.merge_stats(stats)
     new_slab
-  end
-
-  def merge_stats(stats={})  
-    stats.each do |key, stat|
-      self.stats[key] = stat
-      self.class.send( :define_method, key, eval("lambda {return stats[:" + key.to_s + "]}"))
-    end 
   end
 
   def ratio_of_sets_to_hits
@@ -125,8 +126,9 @@ class Nostalgia::Slab
   def summary(display_units=:kb)
     display_factor = case display_units.to_sym
     when :bytes then 1.0
-    when :kb   then 1024.0
-    when :mb   then 1024.0*1024.0
+    when :kb    then 1024.0
+    when :mb    then 1024.0*1024.0
+    when :gb    then 1024.0*1024.0*1024.0
     else 1
     end
 
@@ -142,7 +144,7 @@ class Nostalgia::Slab
     "Memory Allocated (memory actually consuned)                                              : #{memory_allocated / display_factor} #{display_units}\n" + \
     "Usable memory                                                                            : #{usable_memory / display_factor} #{display_units}\n" + \
     "Requested memory                                                                         : #{mem_requested / display_factor} #{display_units}\n" + \
-    "Used   memory (memory containng data )                                                   : #{memory_utilised / display_factor} #{display_units}\n" + \
+    "Used memory (memory containng data )                                                     : #{memory_utilised / display_factor} #{display_units}\n" + \
     "Unused memory (allocated but not yet used)                                               : #{unused_memory / display_factor} #{display_units}\n" + \
     "Unusable memory (memory at end of slabs which cant ever be used)                         : #{unusable_memory / display_factor} #{display_units}\n" + \
     "Memory wasted across items (space due to difference between item size and chunk size)    : #{memory_wasted_across_items  / display_factor} #{display_units}\n" + \
@@ -153,10 +155,10 @@ class Nostalgia::Slab
     "Ratio of evictions to items set                                                          : #{ratio_of_evictions_to_items_set}\n" + \
     "Evicted before expired                                                                   : #{evictions_before_expiry}\n" + \
     "Evicted never accessed                                                                   : #{evictions_before_access}\n" + \
-    "Percentage of eviction never accessed                                                    : #{ percentage_of_evictions_never_accessed }\n" + \
+    "Percentage of eviction never accessed                                                    : #{percentage_of_evictions_never_accessed}\n" + \
     "Number of times chunk has been reused after expiry                                       : #{reclaimed}\n" + \
     "Reclaimed items compared to evicted items                                                : #{ratio_of_reclaimed_items_to_evicted_items}\n" + \
-    "Volume of data evicted before use                                                        : #{volume_of_evictions  / display_factor} #{display_units}\n" + \
+    "Volume of data evicted before use                                                        : #{volume_of_evictions / display_factor} #{display_units}\n" + \
     "outofmemory                                                                              : #{outofmemory}\n"
   end
 end

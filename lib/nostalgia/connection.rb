@@ -11,7 +11,7 @@ module Nostalgia
       @connection = Socket.tcp(Nostalgia::Configuration.host,Nostalgia::Configuration.port)
     end
 
-    def self.message(msg, &blk)
+    def self.message(msg)
       @connection.puts(msg)
       while line=@connection.gets
         yield line 
