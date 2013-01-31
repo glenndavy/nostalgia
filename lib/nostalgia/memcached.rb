@@ -80,7 +80,7 @@ module Nostalgia
       else 1
       end
      
-      "Uptime                                                   : #{uptime}\n "     + \
+      "Uptime                                                   : #{uptime} seconds ( #{ChronicDuration.output(uptime, :weeks => true)}\n "     + \
       "Version                                                  : #{version}\n "    + \
       "Current Items                                            : #{curr_items}\n " + \
       "Total Items                                              : #{total_items}\n" + \
@@ -100,6 +100,7 @@ module Nostalgia
       #"Evicted unfetched                                        : #{evicted_unfetched}\n" + \
       "Ratio of reclaimed items to evicted items                : #{ratio_of_reclaimed_items_to_evicted_items}\n" + \
       "Percentage items that get evicted                        : #{ratio_of_evicted_items_to_total_items * 100.0}\n"
+      "Connection Structures                                    : #{connection_structures}\n"
     end
   end
 end
