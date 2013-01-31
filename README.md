@@ -1,25 +1,21 @@
 # Nostalgia
 
-TODO: Write a gem description
+A gem to use when looking back fondly on your memcached stats.
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'nostalgia'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install nostalgia
 
 ## Usage
 
-TODO: Write usage instructions here
+````
+cd nostalgia
+bundle exec irb -r 'nostalgia'
+Nostalgia.configure
+Nostalgia.connect
+mc=Nostalgia::Memcached.new
+mc.collect_stats
 
+# Then poke around. A quick summary available with:
+mc.summary
+````
 ## Contributing
 
 1. Fork it
