@@ -50,7 +50,7 @@ class Nostalgia::Slab
     evicted
   end
 
-  def evictions_before_access
+  def evictions_before_explicit_expiry
     evicted_nonzero
   end
 
@@ -115,7 +115,7 @@ class Nostalgia::Slab
     evicted * chunk_size
   end
 
-  def percentage_of_evictions_never_accessed
+  def percentage_of_evictions_with_explicit_expiry
     (evicted_nonzero / evicted) * 100.0 if evicted > 0
   end
 
@@ -123,7 +123,8 @@ class Nostalgia::Slab
     reclaimed / evicted if evicted > 0
   end
 
-  def summary(display_units=:kb)
+
+  def summary(display_units=:mb)
     display_factor = case display_units.to_sym
     when :bytes then 1.0
     when :kb    then 1024.0
@@ -149,16 +150,20 @@ class Nostalgia::Slab
     "Unusable memory (memory at end of slabs which cant ever be used)                         : #{unusable_memory / display_factor} #{display_units}\n" + \
     "Memory wasted across items (space due to difference between item size and chunk size)    : #{memory_wasted_across_items  / display_factor} #{display_units}\n" + \
     "Memory wasted across slab (whats asked for vs whats provided)                            : #{memory_wasted_across_slab   / display_factor} #{display_units}\n" + \
-    "Seconds since last eviction                                                              : #{evicted_time}\n" + \
-    "Age of oldest item in slab                                                               : #{age}\n" + \
-    "sets:hits                                                                                : #{ratio_of_sets_to_hits}\n" + \
-    "Ratio of evictions to items set                                                          : #{ratio_of_evictions_to_items_set}\n" + \
+    "Seconds since last eviction                                                              : #{evicted_time} (#{ChronicDuration.output(evicted_time)})\n" + \
+    "Age of oldest item in slab                                                               : #{age} (#{ChronicDuration.output(age)})\n" + \
+    "Set commands issued                                                                      : #{cmd_set}\n" + \
+    "Get hits                                                                                 : #{get_hits}\n" + \
+    "Delete hits                                                                              : #{delete_hits}\n" + \
+    "Ratio of sets to hits                                                                    : #{ratio_of_sets_to_hits}\n" + \
+    "  * i.e. each set results in an average of #{ 1 / ratio_of_sets_to_hits if ratio_of_sets_to_hits > 0} hits\n" + \
+    "Percentage of items set get evicted                                                      : #{ratio_of_evictions_to_items_set * 100.0}\n" + \
     "Evicted before expired                                                                   : #{evictions_before_expiry}\n" + \
-    "Evicted never accessed                                                                   : #{evictions_before_access}\n" + \
-    "Percentage of eviction never accessed                                                    : #{percentage_of_evictions_never_accessed}\n" + \
+    "Evicted before explict expiry                                                            : #{evictions_before_explicit_expiry}\n" + \
+    "Percentage of evictions with explict expiry                                              : #{percentage_of_evictions_with_explicit_expiry}\n" + \
     "Number of times chunk has been reused after expiry                                       : #{reclaimed}\n" + \
     "Reclaimed items compared to evicted items                                                : #{ratio_of_reclaimed_items_to_evicted_items}\n" + \
-    "Volume of data evicted before use                                                        : #{volume_of_evictions / display_factor} #{display_units}\n" + \
+    "Volume of data evicted prematurly                                                        : #{volume_of_evictions / (1024 * 1024 * 1024)} Gb\n" + \
     "outofmemory                                                                              : #{outofmemory}\n"
   end
 end

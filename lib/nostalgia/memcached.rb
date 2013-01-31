@@ -1,3 +1,4 @@
+require 'chronic_duration'
 module Nostalgia
   class Memcached
     attr_accessor :general_stats, :slabs
@@ -71,6 +72,18 @@ module Nostalgia
       total(:current_minimum_space_wasted)
     end
 
+    def total_volumne_of_data_evicted
+     total(:volume_of_evictions)  
+    end
+
+    def daily_rate_of_data_evicted
+       total_volumne_of_data_evicted / (uptime / 3600 / 24 )
+    end
+
+    def daily_rate_of_eviction
+      total(:evicted) / (uptime / 3600 / 24) 
+    end
+
     def summary(display_units=:kb)
       display_factor = case display_units.to_sym
       when :bytes then 1.0
@@ -80,7 +93,7 @@ module Nostalgia
       else 1
       end
      
-      "Uptime                                                   : #{uptime} seconds ( #{ChronicDuration.output(uptime, :weeks => true)}\n "     + \
+      "Uptime                                                   : #{uptime} seconds ( #{ChronicDuration.output(uptime, :weeks => true)})\n "     + \
       "Version                                                  : #{version}\n "    + \
       "Current Items                                            : #{curr_items}\n " + \
       "Total Items                                              : #{total_items}\n" + \
@@ -99,8 +112,13 @@ module Nostalgia
       #"Expired unfetched                                        : #{expired_unfetched}\n" + \
       #"Evicted unfetched                                        : #{evicted_unfetched}\n" + \
       "Ratio of reclaimed items to evicted items                : #{ratio_of_reclaimed_items_to_evicted_items}\n" + \
-      "Percentage items that get evicted                        : #{ratio_of_evicted_items_to_total_items * 100.0}\n"
-      "Connection Structures                                    : #{connection_structures}\n"
+      "Percentage items that get evicted                        : #{ratio_of_evicted_items_to_total_items * 100.0}\n" + \
+      "Connection Structures                                    : #{connection_structures}\n" + \
+      "Memory wasted at end of chunks                           : #{minimum_wasted_memory / display_factor} #{display_units}\n" + \
+      "Percentage of memory wasted                              : #{(minimum_wasted_memory / bytes * 100.0)}\n" + \
+      "Total volume of data evicted prematurely                 : #{ total_volumne_of_data_evicted / display_factor} #{display_units}\n" + \
+      "Average daily  volume of data evicted prematurely        : #{ daily_rate_of_data_evicted / display_factor} #{display_units} per day \n"  + \
+      "Average evictions per day                                : #{ daily_rate_of_eviction / display_factor} #{display_units} per day \n" 
     end
   end
 end

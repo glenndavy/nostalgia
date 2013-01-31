@@ -50,66 +50,66 @@ describe Nostalgia::Slab do
       @slab = Nostalgia::Slab.new_from_stats_hash(@stats)
     end
 
-    it 'should have correct raw stats' do
+    it 'should correctly calculate raw stats' do
       @stats.each_key do |k|
         @slab.send(k).must_equal(@stats[k])
       end
     end
 
-    it 'should have correct calculated set to hit ratio' do
+    it 'should correctly calculate calculated set to hit ratio' do
       @slab.ratio_of_sets_to_hits.must_equal( 182 / 170616 )
     end
 
-    it 'should have correct evictions_before_expiry' do
+    it 'should correctly calculate evictions_before_expiry' do
       @slab.evictions_before_expiry.must_equal 0
     end
 
-    it 'should have correct evictions_before_access' do
-      @slab.evictions_before_access.must_equal 0
+    it 'should correctly calculate evictions_before_explicit_expiry' do
+      @slab.evictions_before_explicit_expiry.must_equal 0
     end
 
-    it 'should have correct memory usable' do
+    it 'should correctly calculate memory usable' do
       @slab.memory_utilised.must_equal( 14784 )
     end
 
-    it 'should have correct memory utilised' do
+    it 'should correctly calculate memory utilised' do
       @slab.memory_utilised.must_equal( 14_784 )
     end
 
-    it 'should have correct memory allocated' do
+    it 'should correctly calculate memory allocated' do
       @slab.memory_allocated.must_equal( 1_048_576 )
     end
 
-    it 'should have correct memory unused' do
+    it 'should correctly calculate memory unused' do
       @slab.unused_memory.must_equal( 1_033_792 )
     end
 
-    it 'should have correct unusable memory' do
+    it 'should correctly calculate unusable memory' do
       @slab.unusable_memory.must_equal( 32 )
     end
 
-    it 'should have correct wasted_memory across items' do
+    it 'should correctly calculate wasted_memory across items' do
       @slab.memory_wasted_across_items.must_equal( 1035335 )
     end
 
-    it 'should have correct wasted_memory across slab' do
+    it 'should correctly calculate wasted_memory across slab' do
       @slab.memory_wasted_across_slab.must_equal( 1_035_367 )
     end
    
-    it 'should have correct ratio of sets to evictions' do
+    it 'should correctly calculate ratio of sets to evictions' do
       @slab.ratio_of_evictions_to_items_set.must_equal 0
     end
 
 
-    it 'should have correct volume_of_evictions' do
+    it 'should correctly calculate volume_of_evictions' do
       @slab.volume_of_evictions.must_equal 0
     end
 
-    it 'should have correct percentage_of_evictions_never_accessed' do
-      @slab.percentage_of_evictions_never_accessed.must_equal nil
+    it 'should correctly calculate percentage_of_evictions_with_explicit_expiry' do
+      @slab.percentage_of_evictions_with_explicit_expiry.must_equal nil
     end
 
-    it 'should have correct ratio of reclaimed items to evicted items' do
+    it 'should correctly calculate ratio of reclaimed items to evicted items' do
       @slab.ratio_of_reclaimed_items_to_evicted_items.must_equal nil
     end
     describe "slab summary" do
