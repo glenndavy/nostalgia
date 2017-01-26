@@ -9,8 +9,9 @@ module Nostalgia
       #@slabs  = Nostalgia::Slabs.new
     end
 
-    def collect_stats
-      ["stats", "stats slabs", "stats items"].each do |message| 
+    def collect_stats(stat_commands=["stats", "stats slabs", "stats items"])
+      [stat_commands].flatten.each do |message| 
+        puts "processing #{message}"
         Connection.message(message)  do |line|
           @parser.parse_line line
         end 
@@ -25,6 +26,11 @@ module Nostalgia
         @general_stats[key] = stat
         self.class.send( :define_method, key, eval("lambda {return @general_stats[:" + key.to_s + "]}"))
       end 
+    end
+
+    def stats(refresh=false)
+      collect_stats("stats") if refresh || @general_stats.empty?
+      @general_stats
     end
 
     def ratio_of_sets_to_gets

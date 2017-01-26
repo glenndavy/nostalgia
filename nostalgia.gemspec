@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency("guard-minitest")
   gem.add_development_dependency("guard-bundler")
   gem.add_development_dependency("ruby_gntp")
-  gem.add_development_dependency("debugger")
+  gem.add_development_dependency("debugger", ">=1.5")
   gem.add_development_dependency("rb-fsevent")
   gem.add_dependency("chronic_duration")
 end

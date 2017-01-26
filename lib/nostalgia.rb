@@ -4,6 +4,7 @@ require "nostalgia/connection"
 require "nostalgia/slabs"
 require "nostalgia/parser"
 require "nostalgia/memcached"
+require "nostalgia/simulations"
 require "nostalgia/slab"
 
 module Nostalgia
